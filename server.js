@@ -5,7 +5,7 @@ const port =  5000;
 
 
 
-const { KmsKeyringNode, encrypt, decrypt } = require("@aws-crypto/client-node");
+const { KmsKeyringNode, buildEncrypt, buildDecrypt } = require("@aws-crypto/client-node");
 
 
 const generatorKeyId = "arn:aws:kms:ap-south-1:760572553084:key/edd378e1-a028-4a75-a3be-da023dd15176"
@@ -25,6 +25,8 @@ const context = {
 
 encryptData = async (data, context) => {
     try {
+        
+    const {encrypt} = buildEncrypt()
     const { result } = await encrypt(keyring, data, { encryptionContext: context });
     return result;
     } catch (e) {
@@ -34,6 +36,7 @@ encryptData = async (data, context) => {
 
 decryptData = async (encryptedData, context) => {
 try {
+    const {decrypt} = buildDecrypt()
   const { data, messageHeader } = await decrypt(keyring, encryptedData);
   console.log("===== Message Header =======");
   console.log(JSON.stringify(messageHeader.encryptionContext));
